@@ -1,34 +1,62 @@
 import 'package:flutter/material.dart';
 
-import '../Constant/colors.dart';
+import 'package:todo_app/Constant/colors.dart';
+
 import '../Widget/todo_items.dart';
+import '../model/todo.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class MyHomePage extends StatelessWidget {
+  MyHomePage({super.key});
+  final todosList = ToDo.todoList();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
+      appBar: AppBar(
+        backgroundColor: tdBlue,
+        elevation: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Icon(
+              Icons.menu,
+              color: tdBFColor,
+              size: 30,
+            ),
+            Center(
+              child: Text("Todo"),
+            ),
+            Container(
+              height: 40,
+              width: 40,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                    'https://www.adobe.com/express/feature/image/media_16ad2258cac6171d66942b13b8cd4839f0b6be6f3.png?width=750&format=png&optimize=medium'),
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 15,
+        ),
         child: Column(
           children: [
-            Search(),
+            SizedBox(
+              height: 10.0,
+            ),
+            searchBox(),
             Expanded(
               child: ListView(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(
+                    margin: EdgeInsets.only(
                       top: 50,
                       bottom: 20,
                     ),
-                    child: const Text(
+                    child: Text(
                       "All ToDo...",
                       style: TextStyle(
                         fontSize: 30,
@@ -36,11 +64,20 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  //Todo
-                  TodoItems(),
+                  for (ToDo todoo in todosList)
+                    TodoItems(
+                      todo: todoo,
+                    ),
                 ],
               ),
-            )
+            ),
+            // ListView(
+            //   children: [
+            //     Container(
+            //       margin: EdgeInsets.only(),
+            //     )
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -48,17 +85,20 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//Search Box
-Widget Search() {
+// void _deleteToDoItem(String id) {
+//   setState(() {
+//     todosList.removeWhere((item) => item.id == id);
+//   });
+// }
+
+Widget searchBox() {
   return Container(
-    padding: EdgeInsets.symmetric(
-      horizontal: 15.0,
-    ),
+    padding: EdgeInsets.symmetric(horizontal: 15.0),
     decoration: BoxDecoration(
       color: Color.fromARGB(255, 234, 230, 230),
       borderRadius: BorderRadius.circular(20),
     ),
-    child: const TextField(
+    child: TextField(
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(0),
         prefixIcon: Icon(
@@ -70,42 +110,10 @@ Widget Search() {
           maxHeight: 20,
           minWidth: 25,
         ),
-        hintText: 'Search ',
-        hintStyle: TextStyle(
-          color: tdGray,
-        ),
         border: InputBorder.none,
+        hintText: 'Search',
+        hintStyle: TextStyle(color: tdGray),
       ),
-    ),
-  );
-}
-
-//App Bar
-AppBar _appbar() {
-  return AppBar(
-    backgroundColor: tdBlue,
-    elevation: 0,
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(
-          Icons.menu,
-          color: tdBFColor,
-          size: 30,
-        ),
-        Center(
-          child: Text("Todo"),
-        ),
-        Container(
-          height: 40,
-          width: 40,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-                'https://www.adobe.com/express/feature/image/media_16ad2258cac6171d66942b13b8cd4839f0b6be6f3.png?width=750&format=png&optimize=medium'),
-          ),
-        ),
-      ],
     ),
   );
 }
